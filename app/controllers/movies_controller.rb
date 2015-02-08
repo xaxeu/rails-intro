@@ -6,18 +6,29 @@ class MoviesController < ApplicationController
     # will render app/views/movies/show.<extension> by default
   end
 
+  def movie_ratings
+  Movie.select(:rating).uniq.map(&:rating)
+#Movie.select('distinct rating').map(&:ratng)
+  end
+  
   def index
 #debugger
+  @all_ratings = movie_ratings
+  @selected_ratings = params[:ratings] || {}
+# debugger
   case params[:sort]
     when 'title'
-      @movies = Movie.find(:all, :order => 'title')
+      ordering = {:order => :title}
       @title_header = 'hilite'
     when 'release_date'
-      @movies = Movie.find(:all, :order => 'release_date')
+      ordering = {:order => :release_date}
       @date_header = 'hilite'
-    else
-      @movies = Movie.all
   end
+  if @selected_ratings == {}
+    @selected_rating = Hash[@all_ratings.map {|rating| [rating,rating]}]
+    debugger
+end
+  @movies = Movie.find_all_by_rating(@selected_ratings.keys, ordering)
 end
 
   def new
