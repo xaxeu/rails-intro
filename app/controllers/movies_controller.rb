@@ -7,12 +7,14 @@ class MoviesController < ApplicationController
   end
 
   def index
-debugger
+#debugger
   case params[:sort]
     when 'title'
       @movies = Movie.find(:all, :order => 'title')
+      @title_header = 'hilite'
     when 'release_date'
       @movies = Movie.find(:all, :order => 'release_date')
+      @date_header = 'hilite'
     else
       @movies = Movie.all
   end
