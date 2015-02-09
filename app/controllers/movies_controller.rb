@@ -11,11 +11,12 @@ class MoviesController < ApplicationController
 #Movie.select('distinct rating').map(&:ratng)
   end
   
+ 
+  
   def index
-#debugger
+  
   @all_ratings = movie_ratings
   @selected_ratings = params[:ratings] || {}
-# debugger
   case params[:sort]
     when 'title'
       ordering = {:order => :title}
@@ -25,13 +26,21 @@ class MoviesController < ApplicationController
       @date_header = 'hilite'
   end
   if @selected_ratings == {}
-    @selected_rating = Hash[@all_ratings.map {|rating| [rating,rating]}]
-    debugger
-end
+    @selected_ratings = Hash[@all_ratings.map {|rating| [rating,rating]}]
+  end
+  
   @movies = Movie.find_all_by_rating(@selected_ratings.keys, ordering)
+
 end
 
-  def new
+  
+
+
+
+
+
+
+def new
     # default: render 'new' template
   end
 
