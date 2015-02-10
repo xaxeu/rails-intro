@@ -14,10 +14,11 @@ class MoviesController < ApplicationController
  
   
   def index
-  
+#  debugger
   @all_ratings = movie_ratings
-  @selected_ratings = params[:ratings] || {}
-  case params[:sort]
+  @selected_ratings = params[:ratings] || session[:ratings] || {}
+  sort = params[:sort] || session[:sort]
+  case sort
     when 'title'
       ordering = {:order => :title}
       @title_header = 'hilite'
@@ -28,17 +29,16 @@ class MoviesController < ApplicationController
   if @selected_ratings == {}
     @selected_ratings = Hash[@all_ratings.map {|rating| [rating,rating]}]
   end
-  
+ 
+  if session[:sort] != params[:sort] or session[:ratings] != params[:ratings]
+    session[:sort] = sort
+    session[:ratings] = @selected_ratings
+    flash.keep
+    return redirect_to :sort => sort, :ratings => @selected_ratings
+  end
   @movies = Movie.find_all_by_rating(@selected_ratings.keys, ordering)
 
 end
-
-  
-
-
-
-
-
 
 def new
     # default: render 'new' template
